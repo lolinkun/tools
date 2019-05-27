@@ -1,0 +1,56 @@
+import torch
+import torchvision
+from PIL import Image
+import scipy.io as io
+import pandas as pd
+import train
+import torchvision.transforms as transforms
+import numpy as np
+import torchvision.models as models
+
+checkpoint = torch.load('my_model.pt')
+
+arch = checkpoint['arch']
+num_labels = len(checkpoint['class_to_idx'])
+hidden_units = checkpoint['hidden_units']
+
+
+model = train.load_model(arch=arch, num_labels=num_labels, hidden_units=hidden_units)
+
+
+
+model.load_state_dict(checkpoint['state_dict'])
+
+
+
+
+
+
+
+feature = list(model.classifier.children())[:-2]
+feature = torch.nn.Sequential(*feature)
+model.classifier = feature
+
+
+transform1 = transforms.Compose([
+	transforms.CenterCrop((224,224)),
+	transforms.ToTensor(),
+	]
+)
+
+out1 = torch.zeros(4096, number)
+out1=out1.numpy()
+
+for i in range(0,number):
+    z=l[i]
+    img_path="./"+z
+    img = Image.open(img_path).convert('RGB') # 读取图像
+    img1=transform1(img)
+    img2 = img1.unsqueeze(0)
+    out = model(img2)
+    out1[:, i] = out.data.numpy()
+
+
+io.savemat('zfts.mat', {'array': out1})
+io.savemat('zlab.mat', {'array': label})
+
