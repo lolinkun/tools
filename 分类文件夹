@@ -1,0 +1,22 @@
+
+import pandas as pd
+import os
+import shutil
+
+
+
+
+f=open("1.csv","rb")
+list=pd.read_csv(f)
+list["FILE_ID_JPG"]=""
+list["FILE_ID1"]=list["FILE_ID"]+list["FILE_ID_JPG"]
+
+for i in range(113):
+    os.mkdir(str(i))
+
+for i in range(0,113):
+    listnew=list[list["CATEGORY_ID"]==i]
+    l=listnew["FILE_ID1"].tolist()
+    j=str(i)
+    for each in l:
+        shutil.move(each,j)
